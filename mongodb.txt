@@ -1,0 +1,90 @@
+const mongoose = require('mongoose');
+
+// Verbindung zur MongoDB herstellen
+const dbURI = 'mongodb://username:password@host:port/database';
+mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('MongoDB connected'))
+  .catch(err => console.error('Connection error:', err));
+
+// Pizza Schema definieren
+const pizzaSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  description: { type: String, required: true },
+  ingredients: { type: [String], required: true },
+  price: { type: Number, required: true }
+});
+
+// Pizza Modell erstellen
+const Pizza = mongoose.model('Pizza', pizzaSchema);
+
+// Beispiel-Pizzen mit festgelegten Preisen
+const pizzas = [
+  {
+    title: 'Margherita',
+    description: 'Eine klassische Pizza mit Tomatensauce, frischem Mozzarella und Basilikum, verfeinert mit Olivenöl.',
+    ingredients: ['Tomatensauce', 'Mozzarella', 'Basilikum', 'Olivenöl', 'Salz'],
+    price: 8.99
+  },
+  {
+    title: 'Quattro Stagioni',
+    description: 'Eine Pizza, die die vier Jahreszeiten repräsentiert, mit Artischocken, Schinken, Pilzen und Oliven.',
+    ingredients: ['Tomatensauce', 'Mozzarella', 'Artischocken', 'Schinken', 'Champignons', 'Oliven'],
+    price: 12.99
+  },
+  {
+    title: 'Funghi',
+    description: 'Eine köstliche Pizza mit Tomatensauce, Mozzarella und einer Fülle von frischen Champignons.',
+    ingredients: ['Tomatensauce', 'Mozzarella', 'Champignons', 'Oregano', 'Olivenöl'],
+    price: 10.99
+  },
+  {
+    title: 'Prosciutto e Rucola',
+    description: 'Eine elegante Pizza mit Tomatensauce, Mozzarella, hauchdünn geschnittenem Parmaschinken und frischem Rucola.',
+    ingredients: ['Tomatensauce', 'Mozzarella', 'Parmaschinken', 'Rucola', 'Olivenöl', 'Parmesankäse'],
+    price: 13.99
+  },
+  {
+    title: 'Quattro Formaggi',
+    description: 'Eine cremige Pizza mit einer Mischung aus vier köstlichen Käsesorten: Mozzarella, Gorgonzola, Parmesan und Ricotta.',
+    ingredients: ['Tomatensauce', 'Mozzarella', 'Gorgonzola', 'Parmesan', 'Ricotta', 'Oregano'],
+    price: 11.99
+  },
+  {
+    title: 'Hawaii',
+    description: 'Eine klassische Pizza mit Tomatensauce, Mozzarella, Schinken und saftigen Ananasstücken.',
+    ingredients: ['Tomatensauce', 'Mozzarella', 'Schinken', 'Ananas', 'Oregano'],
+    price: 12.49
+  },
+  {
+    title: 'Vegetariana',
+    description: 'Eine bunte Pizza mit Tomatensauce, Mozzarella und einer Vielzahl von frischen Gemüsesorten wie Paprika, Zucchini, Champignons und Oliven.',
+    ingredients: ['Tomatensauce', 'Mozzarella', 'Paprika', 'Zucchini', 'Champignons', 'Oliven', 'Oregano'],
+    price: 11.49
+  },
+  {
+    title: 'Calzone',
+    description: 'Eine gefüllte Pizza-Tasche mit Tomatensauce, Mozzarella, Schinken, Pilzen und Ricotta.',
+    ingredients: ['Tomatensauce', 'Mozzarella', 'Schinken', 'Champignons', 'Ricotta', 'Oregano'],
+    price: 13.49
+  },
+  {
+    title: 'Vegane Margherita',
+    description: 'Eine vegane Version der klassischen Margherita-Pizza mit hausgemachter Tomatensauce, veganem Mozzarella und frischem Basilikum.',
+    ingredients: ['Hausgemachte Tomatensauce', 'Veganer Mozzarella', 'Basilikum', 'Olivenöl', 'Salz'],
+    price: 9.49
+  },
+  {
+    title: 'Vegane Gemüse-Pizza',
+    description: 'Eine gesunde vegane Pizza mit frischem Gemüse der Saison, wie Paprika, Zucchini, Tomaten, roten Zwiebeln und Oliven, auf einer hausgemachten Tomatensauce und ohne Käse.',
+    ingredients: ['Hausgemachte Tomatensauce', 'Paprika', 'Zucchini', 'Tomaten', 'Rote Zwiebeln', 'Oliven'],
+    price: 10.49
+  }
+];
+
+// Pizzen in die Datenbank einfügen
+Pizza.insertMany(pizzas)
+  .then(docs => {
+    console.log('Pizzas inserted:', docs);
+    mongoose.connection.close(); // Verbindung schließen, nachdem die Pizzen eingefügt wurden
+  })
+  .catch(err => console.error('Insert error:', err));
